@@ -53,3 +53,9 @@ create table invoice(
     car_serial_number int,
     foreign key (car_serial_number) references car(car_serial_number)
 );
+
+ALTER TABLE customer
+ADD COLUMN loyalty_member BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE mechanic
+ADD COLUMN top_sales BOOLEAN DEFAULT FALSE;

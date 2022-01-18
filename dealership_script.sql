@@ -120,7 +120,7 @@ insert into customer(
 	1
 );
 
-select * from customer
+select * from customer;
 
 insert into invoice(
 	seller_id,
@@ -164,4 +164,36 @@ insert into service(
 	1
 );
 
-select * from service
+select * from service;
+
+CREATE OR REPLACE PROCEDURE update_loyalty_status()
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+	UPDATE customer
+	SET loyalty_member = true
+	WHERE customer_id IN (
+		select customer_id
+		from invoice
+	);
+END;
+$$
+
+call update_loyalty_status();
+
+CREATE OR REPLACE PROCEDURE update_top_sales()
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+	UPDATE mechanic
+	SET top_sales = true
+	WHERE mechanic_id IN (
+		select mechanic_id 
+		from service
+		group by mechanic_id 
+		having sum(service_payment_amount) > 1500
+	);
+END;
+$$
+
+call update_top_sales();
